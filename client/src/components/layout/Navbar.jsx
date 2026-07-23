@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   HiOutlineMenuAlt3,
@@ -7,6 +7,8 @@ import {
 
 import Container from "../common/Container";
 import Button from "../common/Button";
+
+import settingContext from "../../context/settingContext/settingContext.js";
 
 const navigation = [
   {
@@ -31,15 +33,18 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const {
+    settings,
+    loading,
+    error,
+  } = useContext(settingContext);
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener(
-      "scroll",
-      handleScroll
-    );
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener(
@@ -48,6 +53,12 @@ export default function Navbar() {
       );
     };
   }, []);
+
+
+  const companyName =
+    settings?.companyName || "Techning";
+
+  const logo = settings?.logo || "";
 
   return (
     <header
@@ -62,9 +73,24 @@ export default function Navbar() {
 
         <NavLink
           to="/"
-          className="text-2xl font-bold tracking-tight text-slate-900"
+          className="flex items-center gap-3"
+          onClick={() => setIsOpen(false)}
         >
-          Tech<span className="text-blue-600">ning</span>
+          {logo ? (
+            <img
+              src={logo}
+              alt={companyName}
+              className="h-10 w-auto object-contain"
+            />
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold text-white">
+              {companyName.charAt(0).toUpperCase()}
+            </div>
+          )}
+
+          <span className="text-xl font-bold tracking-tight text-slate-900">
+            {companyName}
+          </span>
         </NavLink>
 
         {/* Desktop Navigation */}
@@ -99,7 +125,12 @@ export default function Navbar() {
             setIsOpen((prev) => !prev)
           }
           className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 lg:hidden"
-          aria-label="Toggle navigation"
+          aria-label={
+            isOpen
+              ? "Close navigation"
+              : "Open navigation"
+          }
+          aria-expanded={isOpen}
         >
           {isOpen ? (
             <HiOutlineX size={28} />
@@ -119,14 +150,12 @@ export default function Navbar() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  onClick={() =>
-                    setIsOpen(false)
-                  }
+                  onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     `font-semibold ${
                       isActive
                         ? "text-blue-600"
-                        : "text-slate-700"
+                        : "text-slate-700 hover:text-blue-600"
                     }`
                   }
                 >
@@ -137,9 +166,7 @@ export default function Navbar() {
               <Button
                 to="/contact"
                 className="w-full"
-                onClick={() =>
-                  setIsOpen(false)
-                }
+                onClick={() => setIsOpen(false)}
               >
                 Get Started
               </Button>

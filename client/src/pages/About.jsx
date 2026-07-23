@@ -1,11 +1,27 @@
 import React from 'react';
 
+import AboutHero from '../components/about/AboutHero.jsx';
+import WhoWeAre from '../components/about/WhoWeAre.jsx';
+import MissionVision from '../components/about/MissionVision.jsx';
+import AboutStats from '../components/about/AboutStats.jsx';
+
+import MainLayout from '../components/layout/MainLayout.jsx';
+
+import CTASection from '../components/home/CTASection.jsx';
+
 const About = () => {
   return (
-    <div>
-        <h1>About Us</h1>
-        <p>Welcome to our about page!</p>
-    </div>
+    <MainLayout>
+      <AboutHero />
+
+      <WhoWeAre />
+
+      <MissionVision />
+
+      <AboutStats />
+
+      <CTASection />
+    </MainLayout>
   );
 };
 

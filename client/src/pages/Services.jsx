@@ -1,11 +1,20 @@
 import React from 'react';
 
+import MainLayout from '../components/layout/MainLayout.jsx';
+import ServicesHero from '../components/services/ServicesHero.jsx';
+import ServicesGrid from '../components/services/ServicesGrid.jsx';
+import CTASection from '../components/home/CTASection.jsx';
+
+
 const Services = () => {
   return (
-    <div>
-        <h1>Our Services</h1>
-        <p>Discover the services we offer!</p>
-    </div>
+    <MainLayout>
+      <ServicesHero />
+
+      <ServicesGrid />
+
+      <CTASection />
+    </MainLayout>
   );
 };
 

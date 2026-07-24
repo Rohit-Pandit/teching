@@ -1,8 +1,10 @@
 import asyncHandler from "../utils/asyncHandler.js";
 
-import AuthService from "../services/auth.service.js";
+import {loginAdmin} from "../services/auth.service.js";
 
 import { generateAccessToken } from "../utils/jwt.js";
+
+import Admin from "../models/Admin.model.js";
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -14,7 +16,7 @@ const login = asyncHandler(async (req, res) => {
     });
   }
 
-  const admin = await AuthService.loginAdmin(email, password);
+  const admin = await loginAdmin(email, password);
 
   const token = generateAccessToken(admin);
 
@@ -39,7 +41,61 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
+const getMe = asyncHandler(
+async (req, res) => {
+    const admin =
+      await Admin.findById(
+        req.admin.id
+      ).select(
+        "-password"
+      );
 
-export default {
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: "Admin not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Admin fetched successfully",
+      data: {
+        admin,
+      },
+    });
+  }
+);
+
+const logout = asyncHandler(
+  async (req, res) => {
+    res.clearCookie(
+      "accessToken",
+      {
+        httpOnly: true,
+        secure:
+          process.env.NODE_ENV ===
+          "production",
+        sameSite:
+          process.env.NODE_ENV ===
+          "production"
+            ? "none"
+            : "lax",
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Logout successful",
+    });
+  }
+);
+
+
+export {
   login,
+  getMe,
+  logout
 };

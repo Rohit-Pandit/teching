@@ -9,9 +9,7 @@ import { ADMIN_EMAIL, ADMIN_PASSWORD } from "../config/env.js";
 const createAdmin = async () => {
   try {
     await connectDB();
-
-    const email = ADMIN_EMAIL;
-
+    const email = ADMIN_EMAIL 
     const existingAdmin = await Admin.findOne({
       email,
     });
@@ -38,6 +36,11 @@ const createAdmin = async () => {
     console.error("Failed to create admin:", error);
 
     process.exit(1);
+  }
+  finally {
+    console.log("Admin creation process completed");
+    process.exit(0);
+    
   }
 };
 

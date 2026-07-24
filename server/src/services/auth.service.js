@@ -24,6 +24,4 @@ const loginAdmin = async (email, password) => {
   return admin;
 };
 
-export default {
-  loginAdmin,
-};
+export { loginAdmin };
